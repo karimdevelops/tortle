@@ -28,8 +28,7 @@ async def rate_limit(request: Request, call_next):
     counter.increment()
     current_time = time.time()
     elapsed_seconds = current_time - counter.start_time
-    print(elapsed_seconds)
-    print(counter.value)
+
     if elapsed_seconds > 60:
         counter.reset()
 
