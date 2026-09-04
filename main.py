@@ -36,6 +36,7 @@ async def rate_limit(request: Request, call_next):
         return JSONResponse(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             content={"detail": "Too many reqs"},
+            headers={"Retry-After": f"{60 - elapsed_seconds}"},
         )
 
     response = await call_next(request)
