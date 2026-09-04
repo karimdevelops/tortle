@@ -35,7 +35,7 @@ async def rate_limit(request: Request, call_next):
 
     if counter.value > 6:
         return JSONResponse(
-            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             content={"detail": "Too many reqs"},
         )
 
