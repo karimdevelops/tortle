@@ -3,15 +3,13 @@ name = "tortle"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "Abdul Karim", email = "karim.develops@gmail.com" }
-]
+authors = [{ name = "Abdul Karim", email = "karim.develops@gmail.com" }]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = ["fastapi[standard]>=0.141.1"]
 
-[project.scripts]
-tortle = "tortle:main"
+# [project.scripts]
+# tortle = "tortle"
 
-[build-system]
-requires = ["uv_build>=0.12.5,<0.13.0"]
-build-backend = "uv_build"
+# [build-system]
+# requires = ["uv_build>=0.12.5,<0.13.0"]
+# build-backend = "uv_build"
