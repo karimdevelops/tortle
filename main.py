@@ -17,7 +17,7 @@ class Counter:
         self.start_time = time.time()
 
 
-counter = Counter()
+counters: dict[str, Counter] = {}
 
 app = FastAPI()
 
@@ -25,14 +25,29 @@ app = FastAPI()
 @app.middleware("http")
 async def rate_limit(request: Request, call_next):
 
-    counter.increment()
+    if not request.client:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "host doesn't exist"},
+        )
+
+    ip = request.client.host
+
+    if ip not in counters:
+        counter = Counter()
+        counters[ip] = counter
+
+    counters[ip].increment()
+
     current_time = time.time()
-    elapsed_seconds = current_time - counter.start_time
+    elapsed_seconds = current_time - counters[ip].start_time
 
     if elapsed_seconds > 60:
-        counter.reset()
+        counters[ip].reset()
 
-    if counter.value > 6:
+    print(counters[ip].value)
+
+    if counters[ip].value > 6:
         return JSONResponse(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             content={"detail": "Too many reqs"},
