@@ -18,10 +18,13 @@ class Counter:
         self.start_time = time.time()
 
 
-counters: dict[str, Counter] = {}
-
-
 class SlidingLogLimiter(BaseHTTPMiddleware):
+    def __init__(self, app, limit, window):
+        super().__init__(app)
+        self.limit = limit
+        self.window = window
+        self.counters: dict[str, Counter] = {}
+
     async def dispatch(self, request: Request, call_next):
 
         if not request.client:
@@ -32,19 +35,19 @@ class SlidingLogLimiter(BaseHTTPMiddleware):
 
         ip = request.client.host
 
-        if ip not in counters:
+        if ip not in self.counters:
             counter = Counter()
-            counters[ip] = counter
+            self.counters[ip] = counter
 
-        counters[ip].increment()
+        self.counters[ip].increment()
 
         current_time = time.time()
-        elapsed_seconds = current_time - counters[ip].start_time
+        elapsed_seconds = current_time - self.counters[ip].start_time
 
-        if elapsed_seconds > 60:
-            counters[ip].reset()
+        if elapsed_seconds > self.window:
+            self.counters[ip].reset()
 
-        if counters[ip].value > 6:
+        if self.counters[ip].value > self.limit:
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 content={"detail": "Too many reqs"},
