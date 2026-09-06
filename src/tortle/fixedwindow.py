@@ -18,7 +18,7 @@ class Counter:
         self.start_time = time.time()
 
 
-class SlidingLogLimiter(BaseHTTPMiddleware):
+class FixedWindowLimiter(BaseHTTPMiddleware):
     def __init__(self, app, limit, window):
         super().__init__(app)
         self.limit = limit

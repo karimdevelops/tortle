@@ -1,3 +1,3 @@
-from .slidinglog import SlidingLogLimiter
+from .fixedwindow import FixedWindowLimiter
 
-__all__ = ["SlidingLogLimiter"]
+__all__ = ["FixedWindowLimiter"]
