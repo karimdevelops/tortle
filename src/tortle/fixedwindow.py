@@ -51,7 +51,9 @@ class FixedWindowLimiter(BaseHTTPMiddleware):
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 content={"detail": "Too many reqs"},
-                headers={"Retry-After": f"{60 - elapsed_seconds}"},
+                headers={
+                    "Retry-After": f"{60 - round(elapsed_seconds, 1)}"
+                },
             )
 
         response = await call_next(request)
