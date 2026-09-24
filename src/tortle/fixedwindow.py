@@ -30,7 +30,7 @@ class FixedWindowLimiter(BaseHTTPMiddleware):
         if not request.client:
             return JSONResponse(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                content={"detail": "host doesn't exist"},
+                content={"detail": "Host doesn't exist"},
             )
 
         ip = request.client.host
